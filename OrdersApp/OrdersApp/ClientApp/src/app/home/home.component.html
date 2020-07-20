@@ -1,0 +1,87 @@
+<div class="container">
+  <div class="row">
+    <ng-container *ngIf="orders == null; else orders_exists">
+      <div>There is no orders</div>
+    </ng-container>
+    <ng-template #orders_exists>
+      <div class="col-md-4 pl-0">
+        <div class="border rounded p-3 pb-5 h-100 position-relative">
+          <ul class="list-group">
+            <li class="list-group-item" *ngFor="let order of orders; let i = index"
+                [ngClass]="{'active': isActive[i]}"
+                (click)="getOrderProducts(order); isActive = []; isActive[i] = (!isActive[i])">
+                <ng-container *ngIf="order.status == 'Complete'; else order_in_progress">
+                  <div class="order-complete"></div>
+                </ng-container>
+                <ng-template #order_in_progress>
+                  <div class="order-in-progress"></div>
+                </ng-template>Order #{{order.id}}
+              <span class="float-right">{{order.createDate | format: 'DD.MM.YYYY HH:mm'}}</span>
+            </li>
+          </ul>
+          <div class="status-legend text-center border-top p-2">
+            <div class="d-inline-block mr-3">
+              <div class="order-complete"></div>Complete
+            </div>
+            <div class="d-inline-block">
+              <div class="order-in-progress"></div>In Progress
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="row mb-3">
+          <div class="border rounded p-3 w-100">
+            <div>Number: Order #{{order?.id}}</div>
+            <div>Date: {{order?.createDate | format: 'DD.MM.YYYY HH:mm'}}</div>
+            <div>Status:
+              <ng-container *ngIf="order?.status == 'Complete'; else order_in_progress">
+                <div class="order-complete"></div>{{order.status}}
+              </ng-container>
+              <ng-template #order_in_progress>
+                <div class="order-in-progress"></div>{{order?.status}}
+              </ng-template>
+            </div>
+            <div class="mt-3">Total: {{totalSum}}</div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="rounded p-3 w-100 border">
+            <table class="w-100 table table-striped m-0 table-products">
+              <thead class="bg-dark text-white">
+              <tr>
+                <th class="font-weight-normal">Product Name</th>
+                <th class="font-weight-normal">Qty</th>
+                <th class="font-weight-normal">Price</th>
+                <th class="font-weight-normal">Total</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let product of products">
+                <td>{{product.name}}</td>
+                <td>{{product.quantity}}</td>
+                <td>{{product.price}}</td>
+                <td>{{product.total}}</td>
+              </tr>
+              </tbody>
+              <tfoot>
+              <tr class="bg-dark text-white">
+                <td>Total</td>
+                <td>Qty Sum</td>
+                <td>Price Sum</td>
+                <td>Total Sum</td>
+              </tr>
+              <tr>
+                <td>{{products?.length}}</td>
+                <td>{{qtySum}}</td>
+                <td>{{priceSum}}</td>
+                <td>{{totalSum}}</td>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
